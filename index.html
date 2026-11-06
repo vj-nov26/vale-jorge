@@ -393,10 +393,9 @@ button,a{-webkit-tap-highlight-color:transparent}
     <div class="load"></div>
     <div class="panel" id="fail" hidden>
       <p class="tw">Ups</p>
-      <p class="msg">No se pudo reproducir este video acá.</p>
+      <p class="msg">No se pudo reproducir este video. Probá de nuevo en unos segundos.</p>
       <div class="cta">
         <button class="btn primary" id="retry" type="button">Reintentar</button>
-        <a class="btn" id="fail-open" href="#" target="_blank" rel="noopener">Abrir en Drive</a>
       </div>
     </div>
     <div class="panel" id="end" hidden>
@@ -417,9 +416,9 @@ button,a{-webkit-tap-highlight-color:transparent}
       <button class="cbtn solid" id="next" type="button" aria-label="Siguiente" title="Siguiente (→)">
         <svg viewBox="0 0 24 24"><path d="M18 5v14"/><path d="M5 5l10 7-10 7z"/></svg>
       </button>
-      <a class="cbtn" id="dl" href="#" target="_blank" rel="noopener" aria-label="Descargar este video" title="Descargar">
+      <button class="cbtn" id="dl" type="button" aria-label="Descargar este video" title="Descargar">
         <svg viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
-      </a>
+      </button>
     </div>
   </div>
 </div>
@@ -455,7 +454,10 @@ const DEFAULTS = {
         { id: "1fI2sV81lmn7JtHxxuXuLh3lC019TZeJI", title: "Her" },
         { id: "1uT6Y4mMoKFktnCmQj8Qz2H9QG-i2gzG6", title: "Her" },
         { id: "1I5_95-IWAAolxd0Xs83i_CaUqBEFSzRs", title: "Us" },
-        { id: "1IsXO18E7hH4VNiw25EwBN0CwCieKmxi9", title: "Feliz" }
+        { id: "1IsXO18E7hH4VNiw25EwBN0CwCieKmxi9", title: "Feliz" },
+        { id: "1bdy_Rq_lPFJfKOw7wUmUcNq-O3zpfzud", title: "They" },
+        { id: "1ettaAmve9Csm6kvOtrqsoaUnCtFCjtRO", title: "Peace" },
+        { id: "18900o1lrMC2vrUWTYBa6S3S4zyZcx2ck", title: "Party time" }
       ]
     },
     { title: "Ceremonia", videos: [] },
@@ -473,7 +475,6 @@ const DEFAULTS = {
     ? `https://www.googleapis.com/drive/v3/files/${enc(id)}?alt=media&key=${API_KEY}`
     : `https://drive.usercontent.google.com/download?id=${enc(id)}&export=download&confirm=t`;
   const dlUrl = id => `https://drive.usercontent.google.com/download?id=${enc(id)}&export=download&confirm=t`;
-  const viewUrl = id => `https://drive.google.com/file/d/${enc(id)}/view`;
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -609,7 +610,6 @@ const DEFAULTS = {
     fills.forEach((f, n) => { f.style.width = n < i ? "100%" : "0%"; });
     const newStage = i === startIdx || i === 0 || L[i - 1].title.trim().toLowerCase() !== v.title.trim().toLowerCase();
     if (newStage) showCaption(v, i); else cap.classList.remove("show");
-    dl.href = dlUrl(v.id);
     mode = "video"; stage.classList.add("loading");
     vid.src = playUrl(v.id); vid.muted = muted;
     loadTimer = setTimeout(fail, 45000);
@@ -620,7 +620,6 @@ const DEFAULTS = {
     mode = "fail";
     vid.pause(); vid.removeAttribute("src"); vid.load();
     stage.classList.remove("loading");
-    $("#fail-open").href = viewUrl(L[i].id);
     failCard.hidden = false;
   }
   function showEnd() {
@@ -693,6 +692,8 @@ const DEFAULTS = {
   tap.addEventListener("pointercancel", release);
   tap.addEventListener("pointerleave", release);
 
+  /* Sin href visible: el link de descarga no se expone al mantener apretado o pasar el mouse */
+  dl.addEventListener("click", () => { if (L[i]) window.open(dlUrl(L[i].id), "_blank", "noopener"); });
   $("#prev").addEventListener("click", prev);
   $("#next").addEventListener("click", next);
   $("#repeat").addEventListener("click", repeat);
