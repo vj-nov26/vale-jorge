@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d0d">
+<meta name="robots" content="noindex,nofollow">
+<title>Indes x Vale &amp; Jorge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,100..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,900&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Concepto: portada y acceso con grano B/N del KV de Indes, lista editorial sobre papel blanco,
+     visor oscuro tipo stories. Un solo acento (naranja de los posters) usado con mesura. */
+  --ink:#0d0d0d;
+  --paper:#f5f5f3;
+  --ash:#8f8f8c;
+  --smoke:#2b2b2b;
+  --flame:#f43b1d;
+  --display:"Anybody","Arial Narrow",Arial,sans-serif;
+  --serif:"Bodoni Moda","Didot",Georgia,serif;
+  --script:"Pinyon Script","Snell Roundhand","Apple Chancery",cursive;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--ink);color:#fff;
+  font-family:var(--display);font-stretch:100%;font-weight:400;line-height:1.4;
+  -webkit-font-smoothing:antialiased;
+}
+button,a{-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--flame);outline-offset:3px}
+[hidden]{display:none!important}
+
+.lab{
+  font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+  font-stretch:135%;font-weight:500;
+}
+.lab b{font-weight:900}
+.dim{opacity:.55}
+
+.logo{font-family:var(--serif);font-weight:400;letter-spacing:-.02em;white-space:nowrap;text-transform:none;font-stretch:100%}
+.logo i{font-style:italic;font-weight:900;letter-spacing:-.04em}
+.logo sup{font-size:.38em;vertical-align:super;margin-left:.1em;font-family:var(--display)}
+
+/* Fondo con grano compartido por portada y acceso */
+.grainbg{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:
+    linear-gradient(to top,rgba(0,0,0,.6),transparent 55%),
+    radial-gradient(38% 55% at 20% 42%,#141414 0%,transparent 100%),
+    radial-gradient(34% 52% at 83% 38%,#101010 0%,transparent 100%),
+    radial-gradient(42% 50% at 50% 60%,#adada9 0%,transparent 100%),
+    linear-gradient(180deg,#4b4b4b,#2a2a2a);
+}
+.grainbg::after{
+  content:"";position:absolute;inset:-60px;z-index:-1;pointer-events:none;
+  background-image:var(--grain);background-size:320px 320px;
+  mix-blend-mode:overlay;opacity:.95;
+  animation:jitter .7s steps(1) infinite;
+}
+@keyframes jitter{
+  0%{transform:translate(0,0)}25%{transform:translate(-18px,12px)}
+  50%{transform:translate(14px,-20px)}75%{transform:translate(-10px,-8px)}
+}
+
+/* ---------- Acceso ---------- */
+.gate{
+  position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;
+  padding-block:max(22px,env(safe-area-inset-top)) max(28px,env(safe-area-inset-bottom));
+  padding-left:max(20px,env(safe-area-inset-left));
+  padding-right:max(20px,env(safe-area-inset-right));
+  transition:opacity .7s ease;overflow-y:auto;
+}
+.gate.out{opacity:0;pointer-events:none}
+.gate-top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.gate-card{
+  margin:auto;width:min(100%,400px);padding-block:32px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.gate .lockup{margin:0 0 .4rem;justify-content:center}
+.gate-names{
+  margin:0;font-family:var(--script);font-size:clamp(3.8rem,19vw,6.5rem);line-height:.95;
+  overflow-wrap:anywhere;text-wrap:balance;
+}
+.gate-hint{margin:1.2rem 0 1.4rem;opacity:.8}
+.gate-input{
+  width:100%;max-width:16rem;background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.6);
+  color:#fff;text-align:center;font-family:var(--display);font-stretch:150%;font-weight:300;
+  font-size:2rem;letter-spacing:.5em;padding:.4rem 0 .5rem .5em;border-radius:0;
+}
+.gate-input::placeholder{color:rgba(255,255,255,.35);letter-spacing:.4em}
+.gate-input:focus{outline:none;border-bottom-color:#fff}
+.gate-err{min-height:1.4em;margin:.7rem 0 1rem;font-size:.78rem;color:#fff;opacity:.85;letter-spacing:.06em}
+.gate.shake .gate-card{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-10px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+
+/* ---------- Portada ---------- */
+.cover{
+  min-height:clamp(560px,90svh,920px);
+  display:flex;flex-direction:column;
+  padding-block:max(22px,env(safe-area-inset-top)) clamp(36px,7vw,80px);
+  padding-left:max(20px,env(safe-area-inset-left));
+  padding-right:max(20px,env(safe-area-inset-right));
+}
+.cover-photo{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:-2;
+  filter:grayscale(1) contrast(1.12) brightness(.72);
+}
+.cover-inner{
+  width:100%;max-width:1280px;margin:0 auto;flex:1;
+  display:flex;flex-direction:column;justify-content:space-between;gap:56px;
+}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.topline .logo{font-size:1.15rem}
+.hero{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.lockup{display:flex;align-items:baseline;gap:.7rem;margin:0 0 1.2rem}
+.lockup .logo{font-size:clamp(1.4rem,3.2vw,2.2rem)}
+.lockup .x{font-family:var(--display);font-stretch:150%;font-weight:200;font-size:1.2rem;opacity:.7}
+.thiswas{
+  margin:0;font-stretch:150%;font-weight:150;text-transform:uppercase;
+  font-size:clamp(1.3rem,5.2vw,3.4rem);letter-spacing:.04em;line-height:1;
+}
+.names{
+  margin:.05em 0 0;font-family:var(--script);font-weight:400;
+  font-size:clamp(4.2rem,17vw,14rem);line-height:.95;color:#f6f6f4;
+  text-wrap:balance;overflow-wrap:anywhere;
+}
+.sub{margin:1.4rem 0 1.8rem;max-width:34ch;font-size:.95rem;opacity:.8}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+
+.btn{
+  font-family:var(--display);font-stretch:140%;font-weight:700;font-size:.74rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:1.05rem 1.5rem;border:1px solid rgba(255,255,255,.7);
+  background:transparent;color:#fff;cursor:pointer;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.6rem;line-height:1;border-radius:0;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.btn:hover{background:rgba(255,255,255,.14)}
+.btn.primary{background:#fff;color:var(--ink);border-color:#fff}
+.btn.primary:hover{background:var(--flame);border-color:var(--flame);color:#fff}
+
+.rail{
+  position:absolute;right:max(14px,env(safe-area-inset-right));top:50%;
+  writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);
+  display:none;gap:1.6rem;white-space:nowrap;
+}
+@media (min-width:760px){
+  .rail{display:flex}
+  .cover-inner{padding-right:48px}
+}
+@media (max-width:620px){
+  .topline .dim,.gate-top .dim{display:none}
+}
+
+/* ---------- Lista ---------- */
+.issue{
+  background:var(--paper);color:var(--ink);
+  padding-block:clamp(40px,7vw,88px);
+  padding-left:max(20px,env(safe-area-inset-left));
+  padding-right:max(20px,env(safe-area-inset-right));
+}
+.issue-in{max-width:1280px;margin:0 auto}
+.issue-head{display:flex;justify-content:space-between;gap:16px;padding-bottom:16px}
+#list{list-style:none;margin:0;padding:0}
+.row{
+  display:grid;grid-template-columns:auto 1fr;column-gap:clamp(14px,3vw,36px);row-gap:12px;
+  align-items:center;padding-block:clamp(16px,2.4vw,28px);
+  border-top:1px solid rgba(13,13,13,.18);
+}
+.row:last-child{border-bottom:1px solid rgba(13,13,13,.18)}
+.num{
+  font-stretch:150%;font-weight:900;font-size:clamp(.8rem,1.6vw,1.1rem);letter-spacing:.02em;
+  min-width:2.2em;
+}
+.title{
+  all:unset;cursor:pointer;min-width:0;display:block;
+  font-family:var(--display);font-stretch:150%;font-weight:150;text-transform:uppercase;
+  font-size:clamp(1.2rem,5.6vw,4.4rem);line-height:1.02;
+  transition:font-weight .35s ease;overflow-wrap:anywhere;
+}
+.title:focus-visible{outline:2px solid var(--flame);outline-offset:4px}
+.row:hover .title,.title:focus-visible{font-weight:900}
+.title.soon{cursor:default;opacity:.35}
+.row:hover .title.soon{font-weight:150}
+.soon-l{opacity:.5}
+.acts{grid-column:2;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.mini{
+  font-family:var(--display);font-stretch:140%;font-weight:700;font-size:.66rem;
+  letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+  padding:.8rem 1.05rem;border:1px solid var(--ink);color:var(--ink);background:transparent;
+  cursor:pointer;line-height:1;transition:background .2s,color .2s;display:inline-block;border-radius:0;
+}
+.mini:hover{background:var(--ink);color:#fff}
+.mini.fill{background:var(--ink);color:#fff}
+.mini.fill:hover{background:var(--flame);border-color:var(--flame)}
+@media (min-width:760px){
+  .row{grid-template-columns:auto 1fr auto}
+  .acts{grid-column:auto}
+}
+
+/* ---------- Pie ---------- */
+.foot{
+  padding-block:28px max(28px,env(safe-area-inset-bottom));
+  padding-left:max(20px,env(safe-area-inset-left));
+  padding-right:max(20px,env(safe-area-inset-right));
+}
+.foot-in{
+  max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;
+  gap:12px 24px;flex-wrap:wrap;
+}
+.foot .logo{font-size:1.1rem}
+
+/* ---------- Visor ---------- */
+.viewer{
+  position:fixed;inset:0;z-index:50;display:grid;place-items:center;
+  background:rgba(4,4,4,.97);
+}
+.stage{
+  --ar:.5625;
+  position:relative;overflow:hidden;background:#000;
+  width:min(100vw,calc(100dvh * var(--ar)));
+  aspect-ratio:var(--ar);max-height:100dvh;
+  user-select:none;-webkit-user-select:none;touch-action:manipulation;
+}
+.stage video,.stage iframe{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border:0;background:#000;
+}
+.shade{position:absolute;left:0;right:0;pointer-events:none;z-index:2}
+.shade.t{top:0;height:140px;background:linear-gradient(rgba(0,0,0,.55),transparent)}
+.shade.b{bottom:0;height:220px;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.bars{
+  position:absolute;z-index:6;display:flex;gap:3px;
+  top:max(10px,env(safe-area-inset-top));left:12px;right:12px;
+}
+.bar{flex:1;height:2px;background:rgba(255,255,255,.32);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#fff}
+.vtop{
+  position:absolute;z-index:6;left:12px;right:6px;
+  top:calc(max(10px,env(safe-area-inset-top)) + 12px);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.vtop .logo{font-size:1rem}
+.ibtn{all:unset;cursor:pointer;width:42px;height:42px;display:grid;place-items:center}
+.ibtn svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ibtn:focus-visible{outline:2px solid var(--flame)}
+.ibtn .off{display:none}
+.ibtn.muted .on{display:none}
+.ibtn.muted .off{display:block}
+.tap{
+  position:absolute;z-index:3;left:0;right:0;top:78px;
+  bottom:calc(max(12px,env(safe-area-inset-bottom)) + 62px);
+  -webkit-touch-callout:none;
+}
+.stage.is-frame .tap{display:none}
+.cap{
+  position:absolute;z-index:4;left:16px;right:16px;pointer-events:none;opacity:0;
+  bottom:calc(max(12px,env(safe-area-inset-bottom)) + 84px);
+}
+.cap.show{animation:cap 3s ease both}
+@keyframes cap{0%{opacity:0;transform:translateY(10px)}14%,76%{opacity:1;transform:none}100%{opacity:0}}
+.cap .lab{font-size:.6rem;opacity:.85}
+.cap .tw{
+  margin:.5rem 0 0;font-stretch:150%;font-weight:150;text-transform:uppercase;
+  font-size:clamp(1.2rem,4vw,1.7rem);line-height:1;letter-spacing:.03em;
+}
+.cap .ct{
+  margin:.15rem 0 0;font-stretch:62%;font-weight:800;text-transform:uppercase;
+  font-size:clamp(2rem,8vw,3.2rem);line-height:.95;overflow-wrap:anywhere;
+}
+.vbar{
+  position:absolute;z-index:6;display:flex;gap:8px;left:12px;right:12px;
+  bottom:max(12px,env(safe-area-inset-bottom));
+}
+.vbtn{
+  flex:1;font-family:var(--display);font-stretch:140%;font-weight:700;font-size:.64rem;
+  letter-spacing:.12em;text-transform:uppercase;text-decoration:none;text-align:center;
+  color:#fff;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.45);
+  padding:.95rem .4rem;cursor:pointer;line-height:1;white-space:nowrap;border-radius:0;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.vbtn:hover{background:rgba(255,255,255,.18)}
+.vbtn.solid{background:#fff;color:var(--ink);border-color:#fff}
+.vbtn.solid:hover{background:var(--flame);color:#fff;border-color:var(--flame)}
+.panel{
+  position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;justify-content:center;
+  align-items:flex-start;gap:10px;padding:28px;background:rgba(8,8,8,.88);
+}
+.panel .tw{margin:0;font-stretch:150%;font-weight:150;text-transform:uppercase;font-size:clamp(1.3rem,5vw,2rem);letter-spacing:.04em}
+.panel .nm{margin:0;font-family:var(--script);font-size:clamp(3.4rem,14vw,5.5rem);line-height:.95}
+.panel .cta{margin-top:10px}
+.panel .btn{padding:.95rem 1.2rem;font-size:.66rem}
+.frame-note{
+  position:absolute;z-index:4;left:16px;right:16px;top:calc(max(10px,env(safe-area-inset-top)) + 58px);
+  font-size:.7rem;opacity:.75;pointer-events:none;text-shadow:0 1px 6px #000;
+}
+.stage:not(.is-frame) .frame-note{display:none}
+.load{
+  position:absolute;z-index:4;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;
+  border:1px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;
+  display:none;animation:spin .9s linear infinite;pointer-events:none;
+}
+.stage.loading .load{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#toast{
+  position:fixed;z-index:120;left:50%;transform:translate(-50%,16px);opacity:0;pointer-events:none;
+  bottom:max(24px,env(safe-area-inset-bottom));max-width:calc(100vw - 32px);
+  background:#fff;color:var(--ink);padding:.9rem 1.2rem;
+  font-stretch:130%;font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  transition:opacity .25s,transform .25s;
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .grainbg::after{animation:none}
+  .title{transition:none}
+  .cap.show{animation:none;opacity:1}
+  .gate.shake .gate-card{animation:none}
+  .gate{transition:none}
+  .load{animation-duration:2.4s}
+}
+</style>
+</head>
+<body>
+
+<!-- Acceso: solo show de ingreso privado, no es seguridad real -->
+<div class="gate grainbg" id="gate" role="dialog" aria-modal="true" aria-label="Acceso privado">
+  <div class="gate-top lab">
+    <b data-bind="topline"></b>
+    <span class="dim">A NEW WAY TO STEP IN</span>
+  </div>
+  <form class="gate-card" id="gate-form" autocomplete="off">
+    <p class="lockup">
+      <span class="logo" role="img" aria-label="Indescriptible">*(<i>IN</i>)descriptible<sup>©</sup></span>
+      <span class="x" aria-hidden="true">×</span>
+    </p>
+    <p class="gate-names" data-bind="couple"></p>
+    <p class="gate-hint lab" data-bind="gateHint"></p>
+    <input class="gate-input" id="gate-input" type="text" inputmode="numeric"
+           autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="6"
+           placeholder="······" aria-label="Código de acceso">
+    <p class="gate-err" id="gate-err" aria-live="polite"></p>
+    <button class="btn primary" type="submit">Entrar &gt;&gt;</button>
+  </form>
+</div>
+
+<header class="cover grainbg" id="top">
+  <!-- Foto opcional: assets/portada.jpg (vertical 9:16, ~810x1440). Si no existe, queda el grano. -->
+  <img class="cover-photo" src="assets/portada.jpg" alt="" onerror="this.remove()">
+  <div class="cover-inner">
+    <div class="topline lab">
+      <b data-bind="topline"></b>
+      <span class="dim">A NEW WAY TO STEP IN</span>
+      <span class="logo" role="img" aria-label="Indescriptible">*(<i>IN</i>)descriptible<sup>©</sup></span>
+    </div>
+
+    <div class="hero">
+      <p class="lockup">
+        <span class="logo" role="img" aria-label="Indescriptible">*(<i>IN</i>)descriptible<sup>©</sup></span>
+        <span class="x" aria-hidden="true">×</span>
+      </p>
+      <p class="thiswas" data-bind="thisWas"></p>
+      <h1 class="names" data-bind="couple"></h1>
+      <p class="sub" data-bind="sub"></p>
+      <div class="cta">
+        <button class="btn primary" id="open" type="button">Let’s step in &gt;&gt;</button>
+        <button class="btn" id="dl-all" type="button">Bajar todo ↓</button>
+      </div>
+    </div>
+  </div>
+  <div class="rail lab" aria-hidden="true">
+    <span class="dim">A NEW WAY TO STEP IN</span><b data-bind="topline"></b>
+  </div>
+</header>
+
+<main class="issue">
+  <div class="issue-in">
+    <div class="issue-head lab"><span>Daily edition</span><span id="count"></span></div>
+    <ol id="list"></ol>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="foot-in lab">
+    <span><span class="logo" role="img" aria-label="Indescriptible">*(<i>IN</i>)descriptible<sup>©</sup></span> <span class="dim">×</span> <span data-bind="couple"></span></span>
+    <span class="dim">A new way to step in</span>
+  </div>
+</footer>
+
+<!-- Visor tipo stories -->
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Historias" hidden>
+  <div class="stage" id="stage">
+    <video id="vid" playsinline preload="auto"></video>
+    <iframe id="frame" title="Reproductor de Drive" allow="autoplay; fullscreen" allowfullscreen hidden></iframe>
+    <div class="shade t"></div><div class="shade b"></div>
+    <div class="bars" id="bars"></div>
+    <div class="vtop">
+      <span class="logo" role="img" aria-label="Indescriptible">*(<i>IN</i>)descriptible<sup>©</sup></span>
+      <div>
+        <button class="ibtn" id="mute" type="button" aria-label="Sonido" title="Sonido (M)">
+          <svg class="on" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+          <svg class="off" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
+        </button>
+        <button class="ibtn" id="close" type="button" aria-label="Cerrar" title="Cerrar (Esc)">
+          <svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="frame-note">Reproductor de Drive. Usá Siguiente para pasar al próximo video.</div>
+    <div class="tap" id="tap"></div>
+    <div class="cap" id="cap">
+      <div class="lab" id="cap-lab"></div>
+      <p class="tw" data-bind="thisWas"></p>
+      <p class="ct" id="cap-title"></p>
+    </div>
+    <div class="load"></div>
+    <div class="panel" id="end" hidden>
+      <p class="tw">That was</p>
+      <p class="nm" data-bind="couple"></p>
+      <div class="cta">
+        <button class="btn primary" id="again" type="button">Ver de nuevo ↺</button>
+        <button class="btn" id="dl-all2" type="button">Bajar todo ↓</button>
+      </div>
+    </div>
+    <div class="vbar">
+      <button class="vbtn" id="repeat" type="button">↺ Repetir</button>
+      <button class="vbtn solid" id="next" type="button">Siguiente →</button>
+      <a class="vbtn" id="dl" href="#" target="_blank" rel="noopener">↓ Descargar</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   CONFIGURACIÓN: lo único que se toca para cambiar textos, código o videos.
+   Videos: carpeta de Drive compartida como "Cualquier persona con el link".
+   De cada link  drive.google.com/file/d/ESTE_ES_EL_ID/view  se copia el ID.
+   Un video con id vacío aparece como "Pronto".
+   ===================================================================== */
+const DEFAULTS = {
+  guestCode: "071126",
+  topline: "NOVIEMBRE 2026 · MENDOZA",
+  couple: "Vale & Jorge",
+  thisWas: "This was",
+  sub: "Mirá las historias o bajá cada video con un clic.",
+  gateHint: "Acceso privado",
+  folderUrl: "",
+  videos: [
+    { id: "183CalZmTnuzfRbRFw2diH1nDVBzFPQ6S", title: "Welcome 01" },
+    { id: "1YbiYqsRcMN1zaSqBbXYfc5UxvRAjBPg6", title: "Welcome 02" },
+    { id: "1kmGW65sCNTGwJPCptcDX16wrQn6JALQl", title: "Welcome 03" },
+    { id: "1tcPxzMXWlwiN5GDos9ZNmBtiUQl51nHC", title: "Welcome 04" },
+    { id: "1fI2sV81lmn7JtHxxuXuLh3lC019TZeJI", title: "Welcome 05" },
+    { id: "1uT6Y4mMoKFktnCmQj8Qz2H9QG-i2gzG6", title: "Welcome 06" },
+    { id: "1I5_95-IWAAolxd0Xs83i_CaUqBEFSzRs", title: "Welcome 07" },
+    { id: "1IsXO18E7hH4VNiw25EwBN0CwCieKmxi9", title: "Welcome 08" },
+    { id: "", title: "Highlights" }
+  ]
+};
+
+(() => {
+  const $ = s => document.querySelector(s);
+  const pad = n => String(n).padStart(2, "0");
+  const enc = encodeURIComponent;
+  const playUrl = id => `https://drive.usercontent.google.com/download?id=${enc(id)}&export=download&confirm=t`;
+  const dlUrl = playUrl;
+  const prevUrl = id => `https://drive.google.com/file/d/${enc(id)}/preview`;
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  const cfg = DEFAULTS;
+
+  /* ---------- Toast ---------- */
+  const toast = $("#toast"); let toastT;
+  function say(msg) {
+    toast.textContent = msg; toast.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove("show"), 3600);
+  }
+
+  /* ---------- Render ---------- */
+  const list = $("#list");
+  const P = () => cfg.videos.filter(v => v.id);
+  const N = () => P().length;
+
+  function renderList() {
+    list.innerHTML = ""; let pi = 0;
+    cfg.videos.forEach((v, k) => {
+      const li = document.createElement("li"); li.className = "row";
+      const ok = !!v.id;
+      li.innerHTML = `<span class="num"></span>` + (ok
+        ? `<button class="title" type="button"></button><div class="acts"><button class="mini fill" type="button">Ver</button><a class="mini" target="_blank" rel="noopener">Descargar</a></div>`
+        : `<span class="title soon"></span><div class="acts"><span class="lab soon-l">Pronto</span></div>`);
+      li.querySelector(".num").textContent = pad(k + 1);
+      li.querySelector(".title").textContent = v.title;
+      if (ok) {
+        const idx = pi++;
+        li.querySelectorAll("button").forEach(b => b.dataset.i = idx);
+        li.querySelector("a").href = dlUrl(v.id);
+      }
+      list.appendChild(li);
+    });
+    $("#count").textContent = `${pad(pi)} ${pi === 1 ? "video" : "videos"}`;
+  }
+  list.addEventListener("click", e => {
+    const b = e.target.closest("button[data-i]");
+    if (b) openAt(+b.dataset.i);
+  });
+
+  const bars = $("#bars"); let fills = [];
+  function renderBars() {
+    bars.innerHTML = "";
+    P().forEach(() => { const b = document.createElement("div"); b.className = "bar"; b.innerHTML = "<i></i>"; bars.appendChild(b); });
+    fills = [...bars.querySelectorAll("i")];
+  }
+
+  function applyConfig() {
+    document.title = `Indes x ${cfg.couple}`;
+    document.querySelectorAll("[data-bind]").forEach(el => { el.textContent = cfg[el.dataset.bind] || ""; });
+    gin.maxLength = Math.max(1, cfg.guestCode.length);
+    renderList(); renderBars();
+  }
+
+  /* ---------- Acceso (solo show) ---------- */
+  const gate = $("#gate"), gin = $("#gate-input"), gerr = $("#gate-err");
+  const guarded = [...document.querySelectorAll(".cover,.issue,.foot")];
+  function lock(on) { guarded.forEach(el => { el.inert = on; }); document.body.style.overflow = on ? "hidden" : ""; }
+  lock(true);
+
+  const ready = Promise.resolve();
+  applyConfig();
+
+  function unlock() {
+    gate.classList.add("out"); lock(false);
+    setTimeout(() => { gate.hidden = true; }, 700);
+    lsSet("vj_ok", cfg.guestCode);
+  }
+  async function check() {
+    await ready;
+    if (gin.value.trim().toLowerCase() === cfg.guestCode.toLowerCase()) { unlock(); return; }
+    gerr.textContent = "Código incorrecto";
+    gate.classList.remove("shake"); void gate.offsetWidth; gate.classList.add("shake");
+    gin.value = "";
+  }
+  gin.addEventListener("input", () => {
+    gerr.textContent = "";
+    if (gin.value.trim().length >= cfg.guestCode.length) check();
+  });
+  $("#gate-form").addEventListener("submit", e => { e.preventDefault(); check(); });
+  ready.then(() => {
+    if (lsGet("vj_ok") === cfg.guestCode) { gate.hidden = true; lock(false); }
+    else gin.focus({ preventScroll: true });
+  });
+
+  /* ---------- Bajar todo ---------- */
+  function downloadAll() {
+    if (cfg.folderUrl) { window.open(cfg.folderUrl, "_blank", "noopener"); return; }
+    const real = P();
+    if (!real.length) { say("No hay videos para bajar"); return; }
+    say(`Iniciando ${real.length} ${real.length === 1 ? "descarga" : "descargas"}…`);
+    real.forEach((v, k) => setTimeout(() => {
+      const f = document.createElement("iframe");
+      f.style.display = "none"; f.src = dlUrl(v.id);
+      document.body.appendChild(f);
+      setTimeout(() => f.remove(), 120000);
+    }, k * 1500));
+  }
+  $("#dl-all").addEventListener("click", downloadAll);
+  $("#dl-all2").addEventListener("click", downloadAll);
+  $("#open").addEventListener("click", () => openAt(0));
+
+  /* ---------- Visor ---------- */
+  const viewer = $("#viewer"), stage = $("#stage"), vid = $("#vid"), frame = $("#frame");
+  const cap = $("#cap"), dl = $("#dl"), endCard = $("#end");
+  let i = 0, muted = false, isOpen = false, mode = "none", lastFocus = null;
+  let loadTimer = null, holdTimer = null, held = false;
+
+  function setMuted(m) {
+    muted = m; vid.muted = m;
+    $("#mute").classList.toggle("muted", m);
+    $("#mute").setAttribute("aria-pressed", String(m));
+  }
+  function play() {
+    const p = vid.play();
+    if (p && p.catch) p.catch(err => {
+      if (err && err.name === "NotAllowedError" && !vid.muted) { setMuted(true); vid.play().catch(() => {}); }
+    });
+  }
+  function showCaption(v, k) {
+    $("#cap-lab").textContent = `Daily edition · ${pad(k + 1)}/${pad(N())}`;
+    $("#cap-title").textContent = v.title;
+    cap.classList.remove("show"); void cap.offsetWidth; cap.classList.add("show");
+  }
+  function show(k) {
+    const list_ = P();
+    i = Math.max(0, Math.min(list_.length - 1, k));
+    const v = list_[i];
+    clearTimeout(loadTimer);
+    endCard.hidden = true;
+    stage.classList.remove("is-frame", "loading");
+    frame.hidden = true; frame.removeAttribute("src");
+    fills.forEach((f, n) => { f.style.width = n < i ? "100%" : "0%"; });
+    showCaption(v, i);
+    $("#next").textContent = i === list_.length - 1 ? "Terminar →" : "Siguiente →";
+    dl.href = dlUrl(v.id);
+    vid.pause();
+    mode = "video"; vid.hidden = false; stage.classList.add("loading");
+    vid.src = playUrl(v.id); vid.muted = muted;
+    loadTimer = setTimeout(toFrame, 12000);
+    play();
+  }
+  /* Si el video directo no carga (archivo pesado, Drive lo bloquea) se usa el
+     reproductor de Drive. Ahí no hay avance automático. */
+  function toFrame() {
+    clearTimeout(loadTimer);
+    const v = P()[i]; if (!v) return;
+    mode = "frame";
+    vid.pause(); vid.removeAttribute("src"); vid.load(); vid.hidden = true;
+    stage.classList.remove("loading"); stage.classList.add("is-frame");
+    frame.hidden = false; frame.src = prevUrl(v.id);
+    fills[i].style.width = "100%";
+  }
+  function showEnd() {
+    vid.pause(); mode = "end";
+    fills.forEach(f => { f.style.width = "100%"; });
+    endCard.hidden = false;
+  }
+  const next = () => (i < N() - 1 ? show(i + 1) : showEnd());
+  const prev = () => {
+    if (mode === "video" && vid.currentTime > 2) { vid.currentTime = 0; showCaption(P()[i], i); play(); }
+    else show(i - 1);
+  };
+  function repeat() {
+    if (!endCard.hidden) { show(0); return; }
+    if (mode === "video") { vid.currentTime = 0; showCaption(P()[i], i); play(); }
+    else if (mode === "frame") frame.src = prevUrl(P()[i].id);
+    else show(i);
+  }
+
+  vid.addEventListener("loadedmetadata", () => {
+    clearTimeout(loadTimer);
+    if (vid.videoWidth && vid.videoHeight) {
+      const ar = Math.min(2, Math.max(.4, vid.videoWidth / vid.videoHeight));
+      stage.style.setProperty("--ar", ar.toFixed(4));
+    }
+  });
+  vid.addEventListener("playing", () => stage.classList.remove("loading"));
+  vid.addEventListener("waiting", () => { if (mode === "video") stage.classList.add("loading"); });
+  vid.addEventListener("timeupdate", () => {
+    if (mode === "video" && vid.duration && fills[i]) fills[i].style.width = (vid.currentTime / vid.duration * 100) + "%";
+  });
+  vid.addEventListener("ended", () => { if (mode === "video") next(); });
+  vid.addEventListener("error", () => { if (mode === "video") toFrame(); });
+
+  function openAt(k) {
+    if (!N()) { say("Todavía no hay videos"); return; }
+    lastFocus = document.activeElement;
+    viewer.hidden = false; isOpen = true;
+    document.body.style.overflow = "hidden";
+    show(k);
+    $("#close").focus({ preventScroll: true });
+  }
+  function closeViewer() {
+    isOpen = false; clearTimeout(loadTimer);
+    vid.pause(); vid.removeAttribute("src"); vid.load();
+    frame.removeAttribute("src"); mode = "none";
+    viewer.hidden = true; document.body.style.overflow = "";
+    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+
+  /* Tap: izquierda vuelve, derecha avanza. Mantener apretado pausa. */
+  const tap = $("#tap");
+  tap.addEventListener("contextmenu", e => e.preventDefault());
+  tap.addEventListener("pointerdown", () => {
+    held = false; clearTimeout(holdTimer);
+    holdTimer = setTimeout(() => { held = true; if (mode === "video") vid.pause(); }, 220);
+  });
+  const release = () => {
+    clearTimeout(holdTimer);
+    if (held) { held = false; if (mode === "video") play(); return true; }
+    return false;
+  };
+  tap.addEventListener("pointerup", e => {
+    if (release()) return;
+    const r = tap.getBoundingClientRect();
+    (e.clientX - r.left) / r.width < .3 ? prev() : next();
+  });
+  tap.addEventListener("pointercancel", release);
+  tap.addEventListener("pointerleave", release);
+
+  $("#next").addEventListener("click", next);
+  $("#repeat").addEventListener("click", repeat);
+  $("#again").addEventListener("click", () => show(0));
+  $("#close").addEventListener("click", closeViewer);
+  $("#mute").addEventListener("click", () => setMuted(!muted));
+
+  /* ---------- Teclado ---------- */
+  document.addEventListener("keydown", e => {
+    if (!isOpen) return;
+    if (e.key === "Escape") closeViewer();
+    else if (e.key === "ArrowRight") next();
+    else if (e.key === "ArrowLeft") prev();
+    else if (e.key === " " && mode === "video") { e.preventDefault(); vid.paused ? play() : vid.pause(); }
+    else if (e.key === "r" || e.key === "R") repeat();
+    else if (e.key === "m" || e.key === "M") setMuted(!muted);
+  });
+})();
+</script>
+</body>
+</html>
