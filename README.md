@@ -8,7 +8,7 @@ El código de entrada (`071126`) es un show de ingreso privado, no seguridad rea
 
 ## Cambiar algo
 
-Todo está en el bloque `DEFAULTS` al principio del script: código, textos, lista de videos.
+Todo está en el script: `API_KEY` (clave de Google restringida a este sitio y a Drive API) y el bloque `DEFAULTS` (código, textos, jornadas con sus videos; el título de cada video es el stage).
 Foto de portada opcional: `assets/portada.jpg` (vertical 9:16, ~810×1440 px).
 
 ## Borrarlo del todo
