@@ -15,6 +15,7 @@ Foto de portada opcional: `assets/portada.jpg` (vertical 9:16, ~810×1440 px).
 
 1. GitHub: Settings → Danger zone → Delete this repository.
 2. Drive: quitar el acceso público de la carpeta (Compartir → Acceso restringido).
+3. Google Cloud: borrar el proyecto `vale-jorge` (así desaparece también la clave de API).
 
 No usa base de datos ni toca ningún otro proyecto.
 
